@@ -15,12 +15,12 @@ const Home: NextPage = () => {
   }
 
   return (
-    <main className="max-w-3xl py-8 mx-auto">
-      <h1 className="text-rose-500 font-bold text-3xl pb-6">Todo List App</h1>
+    <main className="mx-auto max-w-3xl px-6 py-8 md:px-0">
+      <h1 className="pb-6 text-3xl font-bold text-rose-500">Todo List App</h1>
       <AddTodoForm />
       {data?.todos.length > 0 && (
         <div className="py-3">
-          <h3 className="text-2xl font-semibold text-zinc-400 py-2">
+          <h3 className="py-2 text-2xl font-semibold text-zinc-400">
             On the list
           </h3>
           <ul>
@@ -32,7 +32,7 @@ const Home: NextPage = () => {
       )}
       {data?.completed.length > 0 && (
         <div className="py-3">
-          <h3 className="text-2xl font-semibold text-zinc-400 py-2">
+          <h3 className="py-2 text-2xl font-semibold text-zinc-400">
             Completed todos
           </h3>
           <ul>

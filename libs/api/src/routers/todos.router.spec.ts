@@ -44,12 +44,45 @@ describe('Todos router', () => {
       completed: false,
     });
 
-    const result2 = await caller.completeTodo({ id: '1' });
+    const result2 = await caller.toggleTodo({ id: '1' });
 
     expect(result2).toMatchObject({
       id: '1',
       title: 'Buy milk',
       completed: true,
+    });
+  });
+
+  it('should uncomplete a todo', async () => {
+    const ctx = await createContextInner({});
+    const caller = todoRouter.createCaller(ctx);
+
+    const input: inferProcedureInput<TodoRouter['addTodo']> = {
+      title: 'Buy milk',
+    };
+
+    const result = await caller.addTodo(input);
+
+    expect(result).toMatchObject({
+      id: '1',
+      title: 'Buy milk',
+      completed: false,
+    });
+
+    const result2 = await caller.toggleTodo({ id: '1' });
+
+    expect(result2).toMatchObject({
+      id: '1',
+      title: 'Buy milk',
+      completed: true,
+    });
+
+    const result3 = await caller.toggleTodo({ id: '1' });
+
+    expect(result3).toMatchObject({
+      id: '1',
+      title: 'Buy milk',
+      completed: false,
     });
   });
 
@@ -117,37 +150,15 @@ describe('Todos router', () => {
 
     const result2 = await caller.getAllTodos();
 
-    expect(result2).toMatchObject([
-      {
-        id: '1',
-        title: 'Buy milk',
-        completed: false,
-      },
-    ]);
-  });
-
-  it('should get a todo', async () => {
-    const ctx = await createContextInner({});
-    const caller = todoRouter.createCaller(ctx);
-
-    const input: inferProcedureInput<TodoRouter['addTodo']> = {
-      title: 'Buy milk',
-    };
-
-    const result = await caller.addTodo(input);
-
-    expect(result).toMatchObject({
-      id: '1',
-      title: 'Buy milk',
-      completed: false,
-    });
-
-    const result2 = await caller.getTodo({ id: '1' });
-
     expect(result2).toMatchObject({
-      id: '1',
-      title: 'Buy milk',
-      completed: false,
+      completed: [],
+      todos: [
+        {
+          id: '1',
+          title: 'Buy milk',
+          completed: false,
+        },
+      ],
     });
   });
 });

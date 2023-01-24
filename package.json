@@ -62,6 +62,8 @@
     "nx": "15.6.0",
     "postcss": "8.4.19",
     "prettier": "^2.6.2",
+    "prettier-plugin-organize-imports": "^3.2.2",
+    "prettier-plugin-tailwindcss": "^0.2.2",
     "react-test-renderer": "18.2.0",
     "swc-loader": "0.1.15",
     "tailwindcss": "3.2.4",

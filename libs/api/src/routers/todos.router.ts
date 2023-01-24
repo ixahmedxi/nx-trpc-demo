@@ -29,10 +29,6 @@ export const todoRouter = router({
     };
   }),
 
-  getCompletedTodos: procedure.query(() => {
-    return todos.filter((todo) => todo.completed);
-  }),
-
   addTodo: procedure
     .input(
       z.object({
@@ -68,20 +64,6 @@ export const todoRouter = router({
       return todo;
     }),
 
-  completeTodo: procedure
-    .input(z.object({ id: z.string() }))
-    .mutation(({ input }) => {
-      const todo = todos.find((todo) => todo.id === input.id);
-      if (!todo) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'Todo not found',
-        });
-      }
-      todo.completed = true;
-      return todo;
-    }),
-
   toggleTodo: procedure
     .input(z.object({ id: z.string() }))
     .mutation(({ input }) => {
@@ -93,20 +75,6 @@ export const todoRouter = router({
         });
       }
       todo.completed = !todo.completed;
-      return todo;
-    }),
-
-  uncompleteTodo: procedure
-    .input(z.object({ id: z.string() }))
-    .mutation(({ input }) => {
-      const todo = todos.find((todo) => todo.id === input.id);
-      if (!todo) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'Todo not found',
-        });
-      }
-      todo.completed = false;
       return todo;
     }),
 
@@ -127,17 +95,6 @@ export const todoRouter = router({
   deleteAllTodos: procedure.mutation(() => {
     todos.splice(0, todos.length);
     return todos;
-  }),
-
-  getTodo: procedure.input(z.object({ id: z.string() })).query(({ input }) => {
-    const todo = todos.find((todo) => todo.id === input.id);
-    if (!todo) {
-      throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Todo not found',
-      });
-    }
-    return todo;
   }),
 });
 
