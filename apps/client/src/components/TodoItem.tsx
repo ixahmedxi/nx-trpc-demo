@@ -100,7 +100,7 @@ export const TodoItem: FC<TodoItemProps> = ({ id, title, completed }) => {
       <div className="flex flex-1 gap-3">
         <input
           type="checkbox"
-          checked={completed}
+          defaultChecked={completed}
           onClick={() => mutate({ id })}
         />
         {!todoEdit && (
