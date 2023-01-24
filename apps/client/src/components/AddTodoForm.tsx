@@ -1,4 +1,4 @@
-import type { FormEvent} from 'react';
+import type { FormEvent } from 'react';
 import { useState } from 'react';
 import { trpc } from '../utils/trpc';
 
@@ -7,8 +7,17 @@ export const AddTodoForm = () => {
   const [todo, setTodo] = useState<string>('');
 
   const { mutate } = trpc.todos.addTodo.useMutation({
-    onSuccess() {
-      void utils.todos.getAllTodos.invalidate();
+    onSuccess(data) {
+      utils.todos.getAllTodos.setData(undefined, (prev) => {
+        if (!prev) {
+          return;
+        }
+
+        return {
+          todos: [...prev.todos, data],
+          completed: prev.completed,
+        };
+      });
     },
   });
 

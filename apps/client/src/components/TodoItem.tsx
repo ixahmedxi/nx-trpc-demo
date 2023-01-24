@@ -13,8 +13,24 @@ export const TodoItem: FC<TodoItemProps> = ({ id, title, completed }) => {
   const [editedTitle, setEditedTitle] = useState<string>(title);
 
   const { mutate } = trpc.todos.toggleTodo.useMutation({
-    onSuccess() {
-      void utils.todos.getAllTodos.invalidate();
+    onSuccess(data) {
+      utils.todos.getAllTodos.setData(undefined, (prev) => {
+        if (!prev) {
+          return;
+        }
+
+        if (data.completed) {
+          return {
+            todos: prev.todos.filter((todo) => todo.id !== data.id),
+            completed: [...prev.completed, data],
+          };
+        }
+
+        return {
+          todos: [...prev.todos, data],
+          completed: prev.completed.filter((todo) => todo.id !== data.id),
+        };
+      });
     },
     onError(error) {
       console.error(error);
@@ -22,8 +38,29 @@ export const TodoItem: FC<TodoItemProps> = ({ id, title, completed }) => {
   });
 
   const { mutate: editTodo } = trpc.todos.editTodo.useMutation({
-    onSuccess() {
-      void utils.todos.getAllTodos.invalidate();
+    onSuccess(data) {
+      utils.todos.getAllTodos.setData(undefined, (prev) => {
+        if (!prev) {
+          return;
+        }
+
+        return {
+          todos: prev.todos.map((todo) => {
+            if (todo.id === data.id) {
+              return data;
+            }
+
+            return todo;
+          }),
+          completed: prev.completed.map((todo) => {
+            if (todo.id === data.id) {
+              return data;
+            }
+
+            return todo;
+          }),
+        };
+      });
     },
     onError(error) {
       console.error(error);
@@ -31,8 +68,18 @@ export const TodoItem: FC<TodoItemProps> = ({ id, title, completed }) => {
   });
 
   const { mutate: deleteTodo } = trpc.todos.deleteTodo.useMutation({
-    onSuccess() {
-      void utils.todos.getAllTodos.invalidate();
+    onSuccess(data) {
+      // Update our todos cache without making another request
+      utils.todos.getAllTodos.setData(undefined, (prev) => {
+        if (!prev) {
+          return;
+        }
+
+        return {
+          todos: prev.todos.filter((todo) => todo.id !== data.id),
+          completed: prev.completed.filter((todo) => todo.id !== data.id),
+        };
+      });
     },
     onError(error) {
       console.error(error);
