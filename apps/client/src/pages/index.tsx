@@ -3,7 +3,7 @@ import { trpc } from '../utils/trpc';
 
 const Home: NextPage = () => {
   const { data, isLoading, isError, error } = trpc.hello.useQuery({
-    text: 'hello',
+    text: 'World',
   });
 
   if (isLoading) {
